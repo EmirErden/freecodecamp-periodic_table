@@ -19,7 +19,7 @@ then
     echo "The element with atomic number $ATOMIC_NUMBER is $NAME ($SYMBOL). It's a $TYPE, with a mass of $ATOMIC_MASS amu. $NAME has a melting point of $MELTING celsius and a boiling point of $BOILING celsius."
     done
   fi
-elif [[ ${#1} -eq 1 && $1 =~ ^[a-zA-Z]$ ]]
+elif [[ $1 =~ ^[a-zA-Z]{1,2}$ ]]
 then
   CHECK_DATABASE=$($PSQL "Select * From elements Where symbol='$1'")
   if [[ -z $CHECK_DATABASE ]]
