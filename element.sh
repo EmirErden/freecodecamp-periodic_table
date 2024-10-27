@@ -20,7 +20,22 @@ then
     done
   fi
 elif [[ ${#1} -eq 1 && $1 =~ ^[a-zA-Z]$ ]]
-
+then
+  CHECK_DATABASE=$($PSQL "Select * From elements Where symbol='$1'")
+  if [[ -z $CHECK_DATABASE ]]
+  then
+    echo I could not find that element in the database.
+  else
+    echo "$($PSQL "Select * From elements Where symbol='$1'")" | while IFS="|" read ATOMIC_NUMBER SYMBOL NAME
+    do
+      echo "$($PSQL "Select * From Properties Where atomic_number=$ATOMIC_NUMBER")" | while IFS="|" read ATOMIC_NUMBER ATOMIC_MASS MELTING BOILING TYPE_ID
+      do
+        TYPE=$($PSQL "Select type From types Where type_id=$TYPE_ID")
+        echo "The element with atomic number $ATOMIC_NUMBER is $NAME ($SYMBOL). It's a $TYPE, with a mass of $ATOMIC_MASS amu. $NAME has a melting point of $MELTING celsius and a boiling point of $BOILING celsius."
+      done 
+    done
+  fi
+elif [[ $1 =~ ^[a-zA-Z\ ]+$ ]]
 
 
 fi
